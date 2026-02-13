@@ -1,3 +1,143 @@
-{
-  "code": "TEST"
-}
+<!doctype html>
+<html lang="pl">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width,initial-scale=1" />
+  <title>Centrivo — Nowoczesne centrum zarządzania zespołem</title>
+  <meta name="description" content="Centrivo: rejestracja czasu pracy i szybki podgląd obsady w magazynie. Rejestrator dostępny pod app.centrivo.pl." />
+  <style>
+    :root{
+      --bg1:#0b1220;
+      --bg2:#111b33;
+      --card:rgba(255,255,255,.06);
+      --border:rgba(255,255,255,.12);
+      --text:#eaf0ff;
+      --muted:#a8b6d8;
+    }
+    *{box-sizing:border-box}
+    body{
+      margin:0;
+      font-family:system-ui,-apple-system,Segoe UI,Roboto,Arial;
+      color:var(--text);
+      background: radial-gradient(1200px 700px at 20% 10%, #1c2a55 0%, transparent 60%),
+                  radial-gradient(1000px 600px at 80% 20%, #3a1f67 0%, transparent 55%),
+                  linear-gradient(135deg, var(--bg1) 0%, var(--bg2) 100%);
+      min-height:100vh;
+    }
+    .wrap{max-width:1100px;margin:0 auto;padding:34px 16px}
+    .top{
+      display:flex;align-items:center;justify-content:space-between;gap:12px;flex-wrap:wrap;
+      margin-bottom:28px;
+    }
+    .brand{
+      display:flex;align-items:center;gap:12px;font-weight:900;letter-spacing:.2px;
+    }
+    .logo{
+      width:40px;height:40px;border-radius:12px;
+      background:linear-gradient(135deg,#6d8bff 0%, #21d4a6 100%);
+      box-shadow:0 18px 60px rgba(0,0,0,.35);
+    }
+    .pill{
+      display:inline-block;padding:8px 12px;border-radius:999px;
+      border:1px solid var(--border);background:rgba(255,255,255,.04);
+      color:var(--muted);font-weight:800;font-size:13px;
+    }
+    .hero{
+      display:grid;grid-template-columns:1.2fr .8fr;gap:16px;align-items:stretch;
+    }
+    @media (max-width: 900px){ .hero{grid-template-columns:1fr} }
+    .card{
+      background:var(--card);
+      border:1px solid var(--border);
+      border-radius:18px;
+      padding:20px;
+      box-shadow:0 18px 60px rgba(0,0,0,.35);
+    }
+    h1{margin:0 0 8px;font-size:38px;line-height:1.1}
+    @media (max-width: 500px){ h1{font-size:30px} }
+    .lead{margin:0 0 16px;color:var(--muted);font-weight:650;font-size:16px}
+    .btns{display:flex;gap:10px;flex-wrap:wrap;margin-top:14px}
+    a.btn{
+      display:inline-flex;align-items:center;justify-content:center;gap:10px;
+      padding:12px 14px;border-radius:14px;text-decoration:none;font-weight:900;
+      border:1px solid var(--border);
+    }
+    .primary{
+      background:linear-gradient(135deg,#6d8bff 0%, #21d4a6 100%);
+      color:#0b1220;border:0;
+    }
+    .ghost{
+      background:rgba(255,255,255,.04);color:var(--text);
+    }
+    ul{margin:0;padding-left:18px;color:var(--muted);line-height:1.6}
+    .grid{
+      display:grid;grid-template-columns:repeat(3,1fr);gap:12px;margin-top:16px;
+    }
+    @media (max-width: 900px){ .grid{grid-template-columns:1fr} }
+    .mini{
+      padding:14px;border-radius:16px;border:1px solid var(--border);
+      background:rgba(255,255,255,.04);
+    }
+    .mini b{color:var(--text)}
+    footer{
+      margin-top:22px;color:var(--muted);font-size:13px;text-align:center;opacity:.9
+    }
+    code{
+      background:rgba(255,255,255,.06);
+      border:1px solid rgba(255,255,255,.10);
+      padding:2px 8px;border-radius:999px;color:var(--text)
+    }
+  </style>
+</head>
+<body>
+  <div class="wrap">
+    <div class="top">
+      <div class="brand">
+        <div class="logo" aria-hidden="true"></div>
+        <div>Centrivo</div>
+        <span class="pill">Rejestratory czasu pracy</span>
+      </div>
+      <span class="pill">Panel rejestratora: <code>app.centrivo.pl</code></span>
+    </div>
+
+    <div class="hero">
+      <div class="card">
+        <h1>Nowoczesne centrum zarządzania zespołem</h1>
+        <p class="lead">
+          Rejestracja czasu pracy + szybki podgląd obsady w magazynie. Prosto, szybko i czytelnie.
+        </p>
+
+        <div class="btns">
+          <a class="btn primary" href="https://app.centrivo.pl/">🚀 Otwórz rejestrator</a>
+          <a class="btn ghost" href="https://api.centrivo.pl/health" target="_blank" rel="noopener">🔎 Status API</a>
+        </div>
+
+        <div class="grid">
+          <div class="mini"><b>Skan EAN</b><br><span>Wejście/wyjście/przerwy jednym skanem.</span></div>
+          <div class="mini"><b>Obsada na żywo</b><br><span>Wiesz kto jest i gdzie pracuje.</span></div>
+          <div class="mini"><b>Prosty start</b><br><span>Działa w przeglądarce, bez instalacji.</span></div>
+        </div>
+      </div>
+
+      <div class="card">
+        <div class="pill" style="margin-bottom:10px;">Jak wejść?</div>
+        <ul>
+          <li>Otwórz <b>rejestrator</b>: <code>app.centrivo.pl</code></li>
+          <li>Zeskanuj kod pracownika (EAN)</li>
+          <li>System pokaże wynik i status</li>
+        </ul>
+
+        <div style="height:12px"></div>
+        <div class="pill" style="margin-bottom:10px;">Dla administracji</div>
+        <ul>
+          <li>API działa pod: <code>api.centrivo.pl</code></li>
+          <li>To jest strona główna (landing): <code>centrivo.pl</code></li>
+        </ul>
+      </div>
+    </div>
+
+    <footer>© 2026 Centrivo | Wersja startowa</footer>
+  </div>
+</body>
+</html>
+
