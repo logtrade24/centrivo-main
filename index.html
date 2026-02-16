@@ -3,140 +3,938 @@
 <head>
   <meta charset="utf-8" />
   <meta name="viewport" content="width=device-width,initial-scale=1" />
-  <title>Centrivo — Nowoczesne centrum zarządzania zespołem</title>
-  <meta name="description" content="Centrivo: rejestracja czasu pracy i szybki podgląd obsady w magazynie. Rejestrator dostępny pod app.centrivo.pl." />
+  <title>Centrivo — kontrola czasu pracy bez papieru</title>
+  <meta name="description" content="Centrivo: kontrola czasu pracy dla biura, magazynu i produkcji. Wejścia/wyjścia, praca na działach, urlopy, L4, zgłoszenia, ogłoszenia, dashboardy, alerty e-mail. Rejestracja kodem EAN bez drogiego sprzętu." />
+  <link rel="icon" href="/favicon.png" type="image/png">
+
+  <meta property="og:type" content="website">
+  <meta property="og:site_name" content="Centrivo">
+  <meta property="og:title" content="Centrivo — kontrola czasu pracy bez papieru">
+  <meta property="og:description" content="Biuro • Magazyn • Produkcja. EAN • Alerty • Dashboardy • Urlopy. Szybkie wdrożenie bez drogiego sprzętu.">
+  <meta property="og:url" content="https://centrivo.netlify.app/">
+  <meta property="og:image" content="https://centrivo.netlify.app/og-workcontrol.png">
+  <meta property="og:image:width" content="1200">
+  <meta property="og:image:height" content="630">
+
+  <meta name="twitter:card" content="summary_large_image">
+  <meta name="twitter:image" content="https://centrivo.netlify.app/og-workcontrol.png">
+
   <style>
     :root{
-      --bg1:#0b1220;
-      --bg2:#111b33;
-      --card:rgba(255,255,255,.06);
-      --border:rgba(255,255,255,.12);
-      --text:#eaf0ff;
-      --muted:#a8b6d8;
+      --bg:#0b1220;
+      --card: rgba(17,26,46,.72);
+      --muted:#9fb0d0;
+      --text:#eef3ff;
+      --accent:#6d8bff;
+      --accent2:#21d4a6;
+      --border:rgba(255,255,255,.10);
+      --shadow: 0 18px 60px rgba(0,0,0,.45);
+      --radius:18px;
+      --maxw:1120px;
     }
+
     *{box-sizing:border-box}
     body{
       margin:0;
-      font-family:system-ui,-apple-system,Segoe UI,Roboto,Arial;
+      font-family: ui-sans-serif, system-ui, -apple-system, Segoe UI, Roboto, Arial, "Noto Sans";
+      background:
+        radial-gradient(1200px 700px at 15% 10%, rgba(109,139,255,.22), transparent 60%),
+        radial-gradient(900px 600px at 80% 20%, rgba(33,212,166,.18), transparent 55%),
+        linear-gradient(180deg, #070b14 0%, #0b1220 60%, #070b14 100%);
       color:var(--text);
-      background: radial-gradient(1200px 700px at 20% 10%, #1c2a55 0%, transparent 60%),
-                  radial-gradient(1000px 600px at 80% 20%, #3a1f67 0%, transparent 55%),
-                  linear-gradient(135deg, var(--bg1) 0%, var(--bg2) 100%);
-      min-height:100vh;
+      line-height:1.55;
     }
-    .wrap{max-width:1100px;margin:0 auto;padding:34px 16px}
-    .top{
-      display:flex;align-items:center;justify-content:space-between;gap:12px;flex-wrap:wrap;
-      margin-bottom:28px;
+    a{color:inherit;text-decoration:none}
+    strong{font-weight:900}
+
+    .wrap{max-width:var(--maxw); margin:0 auto; padding:22px 18px 80px;}
+
+    /* Topbar */
+    .topbar{
+      display:flex; align-items:center; justify-content:space-between;
+      gap:16px; padding:14px 0 10px;
+      position: sticky; top: 0;
+      backdrop-filter: blur(10px);
+      background: rgba(11,18,32,.55);
+      border-bottom: 1px solid rgba(255,255,255,.06);
+      z-index: 50;
     }
-    .brand{
-      display:flex;align-items:center;gap:12px;font-weight:900;letter-spacing:.2px;
-    }
+    .brand{display:flex; align-items:center; gap:12px; font-weight:950; letter-spacing:.2px;}
     .logo{
       width:40px;height:40px;border-radius:12px;
-      background:linear-gradient(135deg,#6d8bff 0%, #21d4a6 100%);
-      box-shadow:0 18px 60px rgba(0,0,0,.35);
+      background:linear-gradient(135deg, var(--accent) 0%, var(--accent2) 100%);
+      box-shadow:0 12px 30px rgba(109,139,255,.20);
+      flex:0 0 auto;
     }
-    .pill{
-      display:inline-block;padding:8px 12px;border-radius:999px;
-      border:1px solid var(--border);background:rgba(255,255,255,.04);
-      color:var(--muted);font-weight:800;font-size:13px;
+    .nav{display:flex; gap:10px; color:var(--muted); font-weight:800; font-size:14px; flex-wrap:wrap;}
+    .nav a{padding:8px 10px; border-radius:12px}
+    .nav a:hover{background:rgba(255,255,255,.06); color:var(--text)}
+    .cta{display:flex; gap:10px; align-items:center; flex-wrap:wrap;}
+    .btn{
+      display:inline-flex; align-items:center; justify-content:center; gap:10px;
+      padding:12px 16px; border-radius:14px;
+      font-weight:950; font-size:14px;
+      border:1px solid var(--border);
+      background:rgba(255,255,255,.04);
+      transition: transform .18s ease, background .18s ease, box-shadow .18s ease;
+      cursor:pointer;
+      white-space: nowrap;
     }
-    .hero{
-      display:grid;grid-template-columns:1.2fr .8fr;gap:16px;align-items:stretch;
+    .btn:hover{transform: translateY(-2px); background:rgba(255,255,255,.07)}
+    .btn.primary{
+      border:none;
+      background:linear-gradient(135deg, var(--accent) 0%, #8a5cff 55%, var(--accent2) 100%);
+      box-shadow:0 16px 40px rgba(109,139,255,.18);
     }
-    @media (max-width: 900px){ .hero{grid-template-columns:1fr} }
+    .btn.primary:hover{box-shadow:0 22px 60px rgba(109,139,255,.24)}
+    .btn.small{padding:10px 12px; border-radius:12px; font-size:13px}
+
+    /* Sections */
     .card{
       background:var(--card);
       border:1px solid var(--border);
-      border-radius:18px;
-      padding:20px;
-      box-shadow:0 18px 60px rgba(0,0,0,.35);
+      border-radius:var(--radius);
+      box-shadow:var(--shadow);
     }
-    h1{margin:0 0 8px;font-size:38px;line-height:1.1}
-    @media (max-width: 500px){ h1{font-size:30px} }
-    .lead{margin:0 0 16px;color:var(--muted);font-weight:650;font-size:16px}
-    .btns{display:flex;gap:10px;flex-wrap:wrap;margin-top:14px}
-    a.btn{
-      display:inline-flex;align-items:center;justify-content:center;gap:10px;
-      padding:12px 14px;border-radius:14px;text-decoration:none;font-weight:900;
+    .section{margin-top:22px}
+    .inner{padding:22px}
+
+    h1{
+      margin:14px 0 10px;
+      font-size:44px;
+      line-height:1.05;
+      letter-spacing:-.6px;
+    }
+    h2{margin:0 0 10px; font-size:22px; letter-spacing:-.2px}
+    h3{margin:0 0 6px; font-size:16px}
+
+    .pill{
+      display:inline-flex; gap:10px; align-items:center;
+      padding:8px 12px; border:1px solid var(--border);
+      border-radius:999px;
+      color:var(--muted); font-weight:850; font-size:13px;
+      background:rgba(255,255,255,.03);
+    }
+    .sub{
+      color:var(--muted);
+      font-size:16px;
+      margin:12px 0 18px;
+      max-width:72ch;
+      font-weight:650;
+    }
+
+    /* Hero */
+    .hero{
+      display:grid;
+      grid-template-columns: 1.2fr .8fr;
+      gap:22px;
+      margin-top:18px;
+      align-items:stretch;
+    }
+    .hero-left{padding:28px}
+    .hero-right{padding:22px}
+
+    .hero-actions{display:flex; gap:10px; flex-wrap:wrap; margin-top:12px}
+
+    .kpi{display:grid; gap:10px}
+    .kpi .row{
+      display:flex; justify-content:space-between; align-items:center;
+      padding:14px 14px;
       border:1px solid var(--border);
+      border-radius:16px;
+      background:rgba(255,255,255,.03);
     }
-    .primary{
-      background:linear-gradient(135deg,#6d8bff 0%, #21d4a6 100%);
-      color:#0b1220;border:0;
-    }
-    .ghost{
-      background:rgba(255,255,255,.04);color:var(--text);
-    }
-    ul{margin:0;padding-left:18px;color:var(--muted);line-height:1.6}
-    .grid{
-      display:grid;grid-template-columns:repeat(3,1fr);gap:12px;margin-top:16px;
-    }
-    @media (max-width: 900px){ .grid{grid-template-columns:1fr} }
+    .kpi .label{color:var(--muted); font-weight:950; font-size:13px}
+    .kpi .val{font-weight:980}
+
+    /* Grids */
+    .grid3{display:grid; grid-template-columns: repeat(3, 1fr); gap:14px; margin-top:14px;}
+    .grid2{display:grid; grid-template-columns: 1fr 1fr; gap:14px; margin-top:14px;}
     .mini{
-      padding:14px;border-radius:16px;border:1px solid var(--border);
-      background:rgba(255,255,255,.04);
+      padding:16px; border-radius:16px;
+      border:1px solid var(--border);
+      background:rgba(255,255,255,.03);
     }
-    .mini b{color:var(--text)}
+    .mini p{margin:0; color:var(--muted); font-weight:650; font-size:14px}
+
+    .tag{
+      display:inline-block;
+      padding:6px 10px; border-radius:999px;
+      border:1px solid var(--border);
+      color:var(--muted); font-weight:950; font-size:12px;
+      background:rgba(255,255,255,.02);
+      margin-bottom:10px;
+    }
+
+    /* Benefit tiles */
+    .benefit{
+      position:relative;
+      padding:18px;
+      border-radius:18px;
+      border:1px solid var(--border);
+      background:linear-gradient(180deg, rgba(255,255,255,.03) 0%, rgba(255,255,255,.02) 100%);
+      overflow:hidden;
+      min-height: 132px;
+    }
+    .benefit::before{
+      content:"";
+      position:absolute; inset:-2px;
+      background: radial-gradient(600px 220px at 20% 0%, rgba(109,139,255,.18), transparent 55%),
+                  radial-gradient(520px 220px at 85% 10%, rgba(33,212,166,.14), transparent 55%);
+      opacity:.9;
+      pointer-events:none;
+    }
+    .benefit > *{position:relative}
+    .b-top{display:flex; align-items:center; gap:10px; margin-bottom:10px}
+    .ico{
+      width:38px;height:38px;border-radius:14px;
+      display:flex;align-items:center;justify-content:center;
+      background:rgba(109,139,255,.16);
+      border:1px solid rgba(109,139,255,.32);
+      font-weight:950;
+    }
+    .benefit h3{margin:0; font-size:16px; font-weight:980}
+    .benefit p{margin:0; color:var(--muted); font-weight:650; font-size:14px; max-width:60ch}
+
+    /* Screens */
+    .screens{
+      display:grid;
+      grid-template-columns: repeat(3, 1fr);
+      gap:14px;
+      margin-top:16px;
+     }
+     @media (max-width: 1040px){
+       .screens{grid-template-columns:1fr}
+     }
+
+    .screen-card{
+      background:rgba(255,255,255,.03);
+      border:1px solid var(--border);
+      border-radius:18px;
+      padding:14px;
+    }
+    .screen-img-wrap{
+      border-radius:14px;
+      overflow:hidden;
+      box-shadow:0 18px 50px rgba(0,0,0,.55);
+      background: rgba(0,0,0,.25);
+      height: 260px;
+      display:flex;
+      align-items:center;
+      justify-content:center;
+    }
+    .screen-card img{
+      width:100%;
+      height:100%;
+      object-fit: cover;
+      display:block;
+    }
+    .screen-title{margin-top:12px; font-size:15px; font-weight:980}
+    .screen-desc{margin-top:6px; color:var(--muted); font-size:13.5px; font-weight:650}
+
+    /* Editions */
+    .editions{display:grid; grid-template-columns: repeat(3, 1fr); gap:14px; margin-top:14px;}
+    .edition{
+      padding:18px;
+      border-radius:18px;
+      border:1px solid var(--border);
+      background:rgba(255,255,255,.03);
+      display:flex; flex-direction:column; gap:10px;
+    }
+    .edition .name{font-weight:980; font-size:16px}
+    .edition .desc{color:var(--muted); font-weight:650; font-size:14px}
+    .list{margin:0; padding-left:18px; color:var(--text)}
+    .list li{margin:6px 0; color:var(--muted); font-weight:650}
+
+    /* Final CTA */
+    .final{
+      margin-top:22px;
+      padding:22px;
+      display:flex; align-items:center; justify-content:space-between;
+      gap:18px; flex-wrap:wrap;
+      background:linear-gradient(135deg, rgba(109,139,255,.18) 0%, rgba(33,212,166,.14) 100%);
+      border:1px solid var(--border);
+      border-radius:22px;
+      box-shadow:var(--shadow);
+    }
+    .final p{margin:6px 0 0; color:var(--muted); font-weight:650}
+
     footer{
-      margin-top:22px;color:var(--muted);font-size:13px;text-align:center;opacity:.9
+      margin-top:22px;
+      color:rgba(255,255,255,.55);
+      font-size:13px;
+      display:flex; justify-content:space-between; flex-wrap:wrap; gap:10px;
     }
-    code{
-      background:rgba(255,255,255,.06);
-      border:1px solid rgba(255,255,255,.10);
-      padding:2px 8px;border-radius:999px;color:var(--text)
+
+    /* Responsive */
+    @media (max-width: 1040px){
+      .hero{grid-template-columns:1fr}
+      .grid3, .editions, .screens{grid-template-columns:1fr}
+      .grid2{grid-template-columns:1fr}
+      h1{font-size:38px}
+      .topbar{position:static}
+      .screen-img-wrap{height: 280px;}
     }
+
+    /* ===== LIGHTBOX SCREENS ===== */
+.screen-img-wrap{
+  cursor: zoom-in;
+  position: relative;
+}
+
+.screen-img-wrap::after{
+  content: "🔍 Kliknij, aby powiększyć";
+  position: absolute;
+  bottom: 10px;
+  right: 10px;
+  font-size: 12px;
+  padding: 6px 10px;
+  border-radius: 999px;
+  background: rgba(0,0,0,.6);
+  color: #fff;
+  opacity: 0;
+  transition: opacity .2s ease;
+}
+
+.screen-img-wrap:hover::after{
+  opacity: 1;
+}
+
+/* Overlay */
+.lightbox{
+  position: fixed;
+  inset: 0;
+  background: rgba(0,0,0,.85);
+  display: none;
+  align-items: center;
+  justify-content: center;
+  z-index: 9999;
+  padding: 30px;
+}
+
+.lightbox.active{
+  display: flex;
+}
+
+.lightbox img{
+  max-width: 95%;
+  max-height: 95%;
+  border-radius: 16px;
+  box-shadow: 0 30px 80px rgba(0,0,0,.8);
+  background: #000;
+}
+
+.lightbox-close{
+  position: absolute;
+  top: 24px;
+  right: 24px;
+  font-size: 28px;
+  color: #fff;
+  cursor: pointer;
+  font-weight: 900;
+}
+
   </style>
 </head>
+
 <body>
   <div class="wrap">
-    <div class="top">
+    <!-- TOPBAR -->
+    <div class="topbar">
       <div class="brand">
         <div class="logo" aria-hidden="true"></div>
         <div>Centrivo</div>
-        <span class="pill">Rejestratory czasu pracy</span>
       </div>
-      <span class="pill">Panel rejestratora: <code>app.centrivo.pl</code></span>
+
+      <div class="nav">
+        <a href="#korzysci">Korzyści</a>
+        <a href="#ean">EAN</a>
+        <a href="#ekrany">Ekrany</a>
+        <a href="#edycje">Edycje</a>
+        <a href="#kontakt">Kontakt</a>
+      </div>
+
+      <div class="cta">
+        <a class="btn primary" href="#kontakt">Umów prezentację</a>
+      </div>
     </div>
 
-    <div class="hero">
-      <div class="card">
-        <h1>Nowoczesne centrum zarządzania zespołem</h1>
-        <p class="lead">
-          Rejestracja czasu pracy + szybki podgląd obsady w magazynie. Prosto, szybko i czytelnie.
+    <!-- HERO -->
+    <section class="hero">
+      <div class="card hero-left">
+        <div class="pill">✅ Bez papieru • ✅ Kontrola na żywo • ✅ Biuro / Magazyn / Produkcja</div>
+
+        <h1>Masz podgląd na żywo: kto jest w pracy, gdzie pracuje i jaka jest realna obsada.</h1>
+
+        <p class="sub">
+          <strong>Centrivo</strong> zbiera w jednym miejscu dane o czasie pracy, działach/operacjach i nieobecnościach.
+          Dzięki temu kierownictwo podejmuje decyzje na podstawie aktualnej sytuacji, a HR i kadry mają gotowe zestawienia.
         </p>
 
-        <div class="btns">
-          <a class="btn primary" href="https://app.centrivo.pl/">🚀 Otwórz rejestrator</a>
-          <a class="btn ghost" href="https://api.centrivo.pl/health" target="_blank" rel="noopener">🔎 Status API</a>
-        </div>
-
-        <div class="grid">
-          <div class="mini"><b>Skan EAN</b><br><span>Wejście/wyjście/przerwy jednym skanem.</span></div>
-          <div class="mini"><b>Obsada na żywo</b><br><span>Wiesz kto jest i gdzie pracuje.</span></div>
-          <div class="mini"><b>Prosty start</b><br><span>Działa w przeglądarce, bez instalacji.</span></div>
-        </div>
+        <div class="hero-actions">
+         <a class="btn primary" href="https://script.google.com/macros/s/AKfycbwAHJXGAMucon6WfQJdsHOwUjRHiZdxD4b75Xh9lDcnoSX6ORS3Fc4mqFLWN-r-ZUE/exec" target="_blank" rel="noopener">
+          🚀 Otwórz rejestrator (demo)
+        </a>
       </div>
 
-      <div class="card">
-        <div class="pill" style="margin-bottom:10px;">Jak wejść?</div>
-        <ul>
-          <li>Otwórz <b>rejestrator</b>: <code>app.centrivo.pl</code></li>
-          <li>Zeskanuj kod pracownika (EAN)</li>
-          <li>System pokaże wynik i status</li>
-        </ul>
+      </div>
 
-        <div style="height:12px"></div>
-        <div class="pill" style="margin-bottom:10px;">Dla administracji</div>
-        <ul>
-          <li>API działa pod: <code>api.centrivo.pl</code></li>
-          <li>To jest strona główna (landing): <code>centrivo.pl</code></li>
-        </ul>
+      <aside class="card hero-right">
+        <div class="kpi">
+          <div class="row">
+            <div>
+              <div class="label">Największy efekt</div>
+              <div class="val">Koniec z papierem</div>
+            </div>
+            <div class="val">🗂️</div>
+          </div>
+          <div class="row">
+            <div>
+              <div class="label">Dla kierowników</div>
+              <div class="val">Kontrola na żywo - działy/operacje</div>
+            </div>
+            <div class="val">✅</div>
+          </div>
+          <div class="row">
+            <div>
+              <div class="label">Dla HR / kadr</div>
+              <div class="val">Gotowe zestawienia</div>
+            </div>
+            <div class="val">📄</div>
+          </div>
+          <div class="row">
+            <div>
+              <div class="label">Wdrożenie</div>
+              <div class="val">Bez drogiego sprzętu</div>
+            </div>
+            <div class="val">📲</div>
+          </div>
+        </div>
+
+        <div style="margin-top:14px; color:var(--muted); font-weight:650; font-size:14px;">
+          <strong style="color:var(--text);">Działa w praktyce:</strong> biura, magazyny, produkcja, różne zmiany i działy.
+        </div>
+      </aside>
+    </section>
+
+    <!-- BENEFITS (tiles) -->
+    <section id="korzysci" class="section card">
+      <div class="inner">
+        <h2>Co zyskujesz dzięki Centrivo</h2>
+        <p class="sub" style="margin:0">
+          To prawdziwe centrum dowodzenia operacją – czasem pracy, obsadą i dostępnością ludzi.
+        </p>
+
+        <div class="grid3">
+          <div class="benefit">
+            <div class="b-top">
+              <div class="ico">🕒</div>
+              <h3>Wejścia i wyjścia bez chaosu</h3>
+            </div>
+            <p>Automatyczny rejestr godzin wejść i wyjść. Wiesz, kto jest w pracy i od kiedy.</p>
+          </div>
+
+          <div class="benefit">
+            <div class="b-top">
+              <div class="ico">⏱️</div>
+              <h3>Realny czas pracy</h3>
+            </div>
+            <p>System liczy czas pracy i buduje spójne dane do rozliczeń, bez ręcznego liczenia.</p>
+          </div>
+
+          <div class="benefit">
+            <div class="b-top">
+              <div class="ico">🏭</div>
+              <h3>Kto pracuje i gdzie</h3>
+            </div>
+            <p>Rejestracja pracy na działach/stanowiskach/operacjach. Kierownik widzi obsadę w czasie rzeczywistym.</p>
+          </div>
+        </div>
+
+        <div class="grid3" style="margin-top:14px">
+          <div class="benefit">
+            <div class="b-top">
+              <div class="ico">📩</div>
+              <h3>Alerty pilnują porządku</h3>
+            </div>
+            <p>Mail o nieprawidłowościach: brak wyjścia, za długa przerwa, spóźnienia, niezgłoszona nieobecność.</p>
+          </div>
+
+          <div class="benefit">
+            <div class="b-top">
+              <div class="ico">📊</div>
+              <h3>Dashboardy i raporty</h3>
+            </div>
+            <p>Podgląd obsady, nieobecności i sytuacji na zmianach. Zestawienia bez Excela i domysłów.</p>
+          </div>
+
+          <div class="benefit">
+            <div class="b-top">
+              <div class="ico">📄</div>
+              <h3>Listy obecności i dokumenty</h3>
+            </div>
+            <p>Automatyczny wydruk list obecności oraz wniosków urlopowych. Jedno kliknięcie, nie ręczna robota.</p>
+          </div>
+        </div>
+
+        <div class="grid3" style="margin-top:14px">
+          <div class="benefit">
+            <div class="b-top">
+              <div class="ico">🌴</div>
+              <h3>Urlopy, dni wolne i L4 w jednym miejscu</h3>
+            </div>
+            <p>Rejestr urlopów, dni wolnych i zwolnień. Koniec z „kto kiedy i czy na pewno”.</p>
+          </div>
+
+          <div class="benefit">
+            <div class="b-top">
+              <div class="ico">🗓️</div>
+              <h3>Plan urlopów na cały rok</h3>
+            </div>
+            <p>Planowanie rocznych urlopów i kontrola kolizji. Mniej niespodzianek i braków obsady.</p>
+          </div>
+
+          <div class="benefit">
+            <div class="b-top">
+              <div class="ico">🧮</div>
+              <h3>Kalkulator godzin i obsady</h3>
+            </div>
+            <p>Funkcja do planowania godzin i obsady zespołu, zanim pojawi się problem.</p>
+          </div>
+        </div>
+
+        <div class="grid2" style="margin-top:14px">
+          <div class="benefit">
+            <div class="b-top">
+              <div class="ico">🛠️</div>
+              <h3>Zgłoszenia: pomysły, problemy, awarie</h3>
+            </div>
+            <p>Prosty rejestr zgłoszeń od pracowników (pomysły, usterki, problemy, BHP). Koniec z „ktoś mówił, ktoś słyszał”.</p>
+          </div>
+
+          <div class="benefit">
+            <div class="b-top">
+              <div class="ico">📢</div>
+              <h3>Ogłoszenia dla pracowników</h3>
+            </div>
+            <p>Panel ogłoszeń od kierowników. Komunikacja uporządkowana, bez kartek i chaosu w wiadomościach.</p>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- EAN -->
+    <section id="ean" class="section card">
+      <div class="inner">
+        <h2>Rejestracja oparta o kody EAN — bez kosztownej infrastruktury</h2>
+
+        <p class="sub" style="margin:0; max-width:85ch">
+          Centrivo wykorzystuje kody EAN przypisane do pracowników. Rejestracja zdarzeń odbywa się przez skan kodu —
+          szybko, prosto i bez inwestowania w dedykowane rejestratory czasu pracy.
+        </p>
+
+        <div class="grid3" style="margin-top:14px">
+          <div class="mini">
+            <div class="tag">Jak to działa</div>
+            <h3>Kod EAN pracownika</h3>
+            <p>Pracownik używa swojego kodu EAN do potwierdzania wejść, wyjść i operacji w systemie.</p>
+          </div>
+
+          <div class="mini">
+            <div class="tag">Sprzęt</div>
+            <h3>Wystarczy tablet + skaner</h3>
+            <p>Do działania systemu wystarczy tablet lub komputer oraz prosty skaner kodów kreskowych. Bez drogich terminali.</p>
+          </div>
+
+          <div class="mini">
+            <div class="tag">Wdrożenie</div>
+            <h3>Niski próg wejścia</h3>
+            <p>Brak kosztownych inwestycji sprzętowych = szybkie uruchomienie i łatwe skalowanie na kolejne działy.</p>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <section class="section card">
+  <div class="inner">
+    <h2>Planowanie pracy i wykonalność obsady</h2>
+    <p class="sub" style="margin:0; max-width:85ch">
+      Centrivo pozwala sprawdzić z wyprzedzeniem, czy plan pracy jest możliwy
+      do zrealizowania przy aktualnej liczbie pracowników — zanim pojawią się
+      nadgodziny, braki obsady lub chaos operacyjny.
+    </p>
+
+    <div class="grid3">
+      <div class="benefit">
+        <div class="b-top">
+          <div class="ico">📐</div>
+          <h3>Analiza wykonalności planu pracy</h3>
+        </div>
+        <p>
+          System automatycznie analizuje plan pracy i pokazuje,
+          czy obecna obsada jest w stanie go zrealizować w danym tygodniu.
+        </p>
+      </div>
+
+      <div class="benefit">
+        <div class="b-top">
+          <div class="ico">🚦</div>
+          <h3>Jasny status: OK / trudne / niemożliwe</h3>
+        </div>
+        <p>
+          Każdy dzień otrzymuje jednoznaczny status wykonalności,
+          dzięki czemu od razu widać, gdzie plan się nie spina.
+        </p>
+      </div>
+
+      <div class="benefit">
+        <div class="b-top">
+          <div class="ico">⏰</div>
+          <h3>Kontrola nadgodzin i przeciążeń</h3>
+        </div>
+        <p>
+          Centrivo wylicza realne godziny pracy na osobę
+          i pokazuje, gdzie pojawią się nadgodziny lub przeciążenie zespołu.
+        </p>
       </div>
     </div>
 
-    <footer>© 2026 Centrivo | Wersja startowa</footer>
+    <div class="grid3" style="margin-top:14px">
+      <div class="benefit">
+        <div class="b-top">
+          <div class="ico">👥</div>
+          <h3>Wiesz, ilu ludzi faktycznie brakuje</h3>
+        </div>
+        <p>
+          System wskazuje konkretne braki kadrowe —
+          bez zgadywania i ręcznych przeliczeń w Excelu.
+        </p>
+      </div>
+
+      <div class="benefit">
+        <div class="b-top">
+          <div class="ico">🧠</div>
+          <h3>Rekomendacje operacyjne</h3>
+        </div>
+        <p>
+          Otrzymujesz jasną informację, czy potrzebna jest
+          zmiana obsady, korekta planu lub reorganizacja pracy.
+        </p>
+      </div>
+
+      <div class="benefit">
+        <div class="b-top">
+          <div class="ico">📊</div>
+          <h3>Decyzje oparte na danych, nie intuicji</h3>
+        </div>
+        <p>
+          Zamiast reagować po fakcie, kierownictwo widzi
+          czarno na białym, gdzie plan pracy jest nierealny.
+        </p>
+      </div>
+    </div>
   </div>
+</section>
+
+
+    <!-- SCREENS -->
+    <section id="ekrany" class="section card">
+  <div class="inner">
+    <h2>Zobacz, jak wygląda Centrivo w praktyce</h2>
+    <p class="sub" style="margin:0; max-width:90ch">
+      To są realne ekrany z działającego środowiska. Pokazują dokładnie to, co widzi pracownik i kierownik.
+    </p>
+
+    <div class="screens">
+      <!-- 1: Operacje -->
+      <div class="screen-card">
+        <div class="screen-img-wrap">
+          <img src="screen-operacje.png" alt="Centrivo – praca na działach i operacjach">
+        </div>
+        <div class="screen-title">Działy i operacje</div>
+        <div class="screen-desc">Rejestracja pracy na konkretnych obszarach. Dane na żywo dla kierownika.</div>
+      </div>
+
+      <!-- 2: Urlopy -->
+      <div class="screen-card">
+        <div class="screen-img-wrap">
+          <img src="screen-urlopy.png" alt="Centrivo – planowanie urlopów">
+        </div>
+        <div class="screen-title">Urlopy i nieobecności</div>
+        <div class="screen-desc">Planowanie, historia i kontrola limitów — bez papierowych wniosków.</div>
+      </div>
+
+      <!-- 3: Zgłoszenia -->
+      <div class="screen-card">
+        <div class="screen-img-wrap">
+          <img src="screen-zgłoszenia.png" alt="Centrivo – zgłoszenia i problemy">
+        </div>
+        <div class="screen-title">Zgłoszenia i problemy</div>
+        <div class="screen-desc">Pomysły, usterki, problemy i BHP — wszystko w jednym miejscu.</div>
+      </div>
+
+      <!-- 4: Ogłoszenia -->
+      <div class="screen-card">
+        <div class="screen-img-wrap">
+          <img src="screen-ogłoszenia.png" alt="Centrivo – ogłoszenia dla pracowników">
+        </div>
+        <div class="screen-title">Ogłoszenia dla pracowników</div>
+        <div class="screen-desc">Kierownik wysyła ważne komunikaty na panel pracownika — szybko i bez chaosu.</div>
+      </div>
+
+      <!-- 5: Dashboard -->
+      <div class="screen-card">
+        <div class="screen-img-wrap">
+          <img src="screen-dasboard.png" alt="Centrivo – dashboard obsady na zmianach">
+        </div>
+        <div class="screen-title">Dashboard obsady na zmianach</div>
+        <div class="screen-desc">Bieżąca kontrola: kto jest w pracy, kto nieobecny i jak wygląda obsada na każdej zmianie.</div>
+      </div>
+
+      <!-- 6: Kalkulator -->
+      <div class="screen-card">
+        <div class="screen-img-wrap">
+          <img src="screen-kalkulator.png" alt="Centrivo – planowanie obsady i obciążenia">
+        </div>
+        <div class="screen-title">Planowanie obsady i obciążenia pracy</div>
+        <div class="screen-desc">Symulacja wykonalności planu: wiesz wcześniej, ilu ludzi potrzeba i gdzie pojawią się braki.</div>
+      </div>
+    </div>
+  </div>
+</section>
+
+
+    <!-- ALERTS (short) -->
+    <section class="section card">
+      <div class="inner">
+        <h2>System, który sam informuje o nieprawidłowościach</h2>
+        <div class="grid3">
+          <div class="mini">
+            <div class="tag">Alerty mailowe</div>
+            <h3>Brak wyjścia / brak rejestracji</h3>
+            <p>System wysyła powiadomienie, gdy pracownik nie zarejestruje wyjścia lub zdarzenie wygląda podejrzanie.</p>
+          </div>
+          <div class="mini">
+            <div class="tag">Dyscyplina pracy</div>
+            <h3>Przerwy i spóźnienia</h3>
+            <p>Powiadomienia o przekroczonych przerwach, spóźnieniach i niezgłoszonych nieobecnościach.</p>
+          </div>
+          <div class="mini">
+            <div class="tag">Szybka reakcja</div>
+            <h3>Porządek bez ręcznego pilnowania</h3>
+            <p>Kierownik reaguje od razu, a nie dopiero na koniec miesiąca w rozliczeniach.</p>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- EDITIONS -->
+    <section id="edycje" class="section card">
+      <div class="inner">
+        <h2>Edycje Centrivo</h2>
+
+        <div class="editions">
+          <div class="edition">
+            <div class="tag">Biuro</div>
+            <div class="name">Centrivo Office</div>
+            <div class="desc">Prosty start i szybkie wdrożenie w środowisku biurowym.</div>
+            <ul class="list">
+              <li>wejście/wyjście + czas pracy</li>
+              <li>kontrola obecności</li>
+              <li>listy obecności (generowanie)</li>
+            </ul>
+          </div>
+
+          <div class="edition">
+            <div class="tag">Magazyn / produkcja</div>
+            <div class="name">Centrivo Warehouse</div>
+            <div class="desc">Edycja operacyjna: działy, operacje, przerwy, dokumenty.</div>
+            <ul class="list">
+              <li>praca na działach / operacjach</li>
+              <li>kontrola przerw</li>
+              <li>urlopy + wnioski + listy obecności</li>
+            </ul>
+          </div>
+
+          <div class="edition">
+            <div class="tag">Najbardziej rozbudowany</div>
+            <div class="name">Centrivo Enterprise</div>
+            <div class="desc">Pełna wersja systemu z indywidualną konfiguracją.</div>
+            <ul class="list">
+              <li>pełna kontrola nieobecności (urlopy, plan roczny, dni wolne)</li>
+              <li>rejestr zwolnień lekarskich (L4)</li>
+              <li>panel zgłoszeń i ogłoszeń</li>
+              <li>dashboardy i raporty operacyjne</li>
+              <li>planowanie i kontrola obsady</li>
+              <li>automatyczny formularz zapotrzebowania do agencji pracy</li>
+            </ul>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- CONTACT -->
+    <section id="kontakt" class="final">
+      <div style="max-width:680px">
+        <h2>Zostaw kontakt — pokażę Centrivo na żywo</h2>
+        <p>Oddzwonię / odpiszę w max 24h. Demo trwa ~20 min.</p>
+
+        <form id="leadForm" style="margin-top:14px; display:grid; gap:10px;">
+          <!-- honeypot (antyspam) -->
+          <input type="text" name="hp" autocomplete="off" tabindex="-1"
+                 style="position:absolute; left:-9999px; opacity:0;" aria-hidden="true">
+
+          <div style="display:grid; gap:8px;">
+            <label style="font-weight:900;">Imię i nazwisko</label>
+            <input name="name" required placeholder="np. Jan Kowalski"
+                   style="padding:12px 12px; border-radius:12px; border:1px solid rgba(255,255,255,.18); background:rgba(0,0,0,.18); color:#fff;">
+          </div>
+
+          <div style="display:grid; gap:8px;">
+            <label style="font-weight:900;">Firma (opcjonalnie)</label>
+            <input name="company" placeholder="np. ABC Logistics"
+                   style="padding:12px 12px; border-radius:12px; border:1px solid rgba(255,255,255,.18); background:rgba(0,0,0,.18); color:#fff;">
+          </div>
+
+          <div style="display:grid; gap:8px;">
+            <label style="font-weight:900;">E-mail</label>
+            <input name="email" type="email" required placeholder="np. jan@firma.pl"
+                   style="padding:12px 12px; border-radius:12px; border:1px solid rgba(255,255,255,.18); background:rgba(0,0,0,.18); color:#fff;">
+          </div>
+
+          <div style="display:grid; gap:8px;">
+            <label style="font-weight:900;">Telefon (opcjonalnie)</label>
+            <input name="phone" placeholder="np. +48 600 000 000"
+                   style="padding:12px 12px; border-radius:12px; border:1px solid rgba(255,255,255,.18); background:rgba(0,0,0,.18); color:#fff;">
+          </div>
+
+          <div style="display:grid; gap:8px;">
+            <label style="font-weight:900;">Obszar</label>
+            <select name="area" required
+                    style="padding:12px 12px; border-radius:12px; border:1px solid rgba(255,255,255,.18); background:rgba(0,0,0,.18); color:#fff;">
+              <option value="" selected disabled>Wybierz…</option>
+              <option>Biuro</option>
+              <option>Magazyn</option>
+              <option>Produkcja</option>
+              <option>Firma mieszana</option>
+            </select>
+          </div>
+
+          <div style="display:grid; gap:8px;">
+            <label style="font-weight:900;">Liczba pracowników (orientacyjnie)</label>
+            <input name="employees" type="number" min="1" placeholder="np. 80"
+                   style="padding:12px 12px; border-radius:12px; border:1px solid rgba(255,255,255,.18); background:rgba(0,0,0,.18); color:#fff;">
+          </div>
+
+          <div style="display:grid; gap:8px;">
+            <label style="font-weight:900;">Wiadomość (opcjonalnie)</label>
+            <textarea name="message" rows="3" placeholder="Co chcesz poprawić / jaki problem chcesz rozwiązać?"
+                      style="padding:12px 12px; border-radius:12px; border:1px solid rgba(255,255,255,.18); background:rgba(0,0,0,.18); color:#fff;"></textarea>
+          </div>
+
+          <button class="btn primary" type="submit" id="leadBtn">Wyślij zgłoszenie</button>
+
+          <div id="leadInfo" style="font-weight:800; color: rgba(255,255,255,.82);"></div>
+          <div style="font-size:13px; color:rgba(255,255,255,.65); font-weight:650;">
+            Nie wysyłamy spamu. Kontakt tylko w sprawie demo Centrivo.
+          </div>
+        </form>
+      </div>
+    </section>
+
+    <footer>
+      <div>© <span id="y"></span> Centrivo</div>
+      <div>Bez papieru • Kontrola na żywo • EAN • Alerty • Raporty</div>
+    </footer>
+  </div>
+
+  <!-- Lightbox -->
+  <div class="lightbox" id="lightbox">
+    <div class="lightbox-close" id="lightboxClose">×</div>
+    <img id="lightboxImg" src="" alt="Podgląd screena">
+  </div>
+
+  <script>
+    // Year
+    document.getElementById('y').textContent = new Date().getFullYear();
+
+    // Lightbox
+    const lightbox = document.getElementById('lightbox');
+    const lightboxImg = document.getElementById('lightboxImg');
+    const lightboxClose = document.getElementById('lightboxClose');
+
+    document.querySelectorAll('.screen-img-wrap img').forEach(img => {
+      img.addEventListener('click', () => {
+        lightboxImg.src = img.src;
+        lightbox.classList.add('active');
+      });
+    });
+
+    lightboxClose.addEventListener('click', () => {
+      lightbox.classList.remove('active');
+    });
+
+    lightbox.addEventListener('click', (e) => {
+      if (e.target === lightbox) lightbox.classList.remove('active');
+    });
+
+    document.addEventListener('keydown', (e) => {
+      if (e.key === 'Escape') lightbox.classList.remove('active');
+    });
+
+    // FORM
+    const LEAD_ENDPOINT = "https://script.google.com/macros/s/AKfycbyr-ruM0I56hV05RcTdjpmw9fQL2mMW0rL6MHCOWVWcDbuaJrhU8qiGTHXiHpTuJE0/exec"; // <- wklej tutaj swój URL z Apps Script Web App
+
+    const form = document.getElementById('leadForm');
+    const info = document.getElementById('leadInfo');
+    const btn = document.getElementById('leadBtn');
+
+    form.addEventListener('submit', async (e) => {
+      e.preventDefault();
+      info.textContent = "";
+      btn.disabled = true;
+      btn.textContent = "Wysyłam...";
+
+      const data = Object.fromEntries(new FormData(form).entries());
+
+      // Antyspam
+      if (data.hp) { btn.disabled = false; btn.textContent = "Wyślij zgłoszenie"; return; }
+      delete data.hp;
+
+      // Kontekst (przyda się w leadach)
+      data.page = location.href;
+      data.ref = document.referrer || "";
+      data.ts = new Date().toISOString();
+      data.source = "Landing";
+
+      try {
+        const res = await fetch(LEAD_ENDPOINT, {
+          method: "POST",
+          headers: { "Content-Type": "text/plain;charset=utf-8" },
+          body: JSON.stringify(data)
+        });
+
+        const json = await res.json();
+
+        if (json && json.ok) {
+          info.textContent = "✅ Dzięki! Zgłoszenie wysłane. Odezwę się do Ciebie.";
+          form.reset();
+        } else {
+          info.textContent = "⚠️ Coś nie poszło. Spróbuj za chwilę.";
+        }
+      } catch (err) {
+        console.error(err);
+        info.textContent = "⚠️ Błąd połączenia. Spróbuj ponownie.";
+      } finally {
+        btn.disabled = false;
+        btn.textContent = "Wyślij zgłoszenie";
+      }
+    });
+  </script>
+
+  <!-- Cloudflare Web Analytics -->
+  <script defer src='https://static.cloudflareinsights.com/beacon.min.js' data-cf-beacon='{"token": "a121bbcd7334431c8c4b4f965301bbff"}'></script>
+  <!-- End Cloudflare Web Analytics -->
 </body>
 </html>
+
