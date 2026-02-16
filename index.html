@@ -203,10 +203,12 @@
       gap:14px;
       margin-top:16px;
      }
-     @media (max-width: 1040px){
-       .screens{grid-template-columns:1fr}
-     }
-
+     @media (max-width: 900px){
+      .screens{grid-template-columns:1fr 1fr}
+    }
+    @media (max-width: 600px){
+      .screens{grid-template-columns:1fr}
+    }
     .screen-card{
       background:rgba(255,255,255,.03);
       border:1px solid var(--border);
